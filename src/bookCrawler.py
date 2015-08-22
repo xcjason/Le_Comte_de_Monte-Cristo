@@ -1,13 +1,21 @@
 import urllib2
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Tag
 import sys
 
 def save(txt, file_name):
-    pass
+    with open(file_name, 'aw') as f:
+        f.write(txt.encode('utf8'))
 
 def parse(html_txt):
-    print html_txt.encode('utf8')
-    pass
+    soup = BeautifulSoup(html_txt)
+    paragraph = soup.find('td', {'width': '820', 'align': 'left', 'bgcolor': '#FFFFFF'})
+    tag_brs = paragraph.contents[1].contents
+    result = unicode('')
+    for item in tag_brs:
+        if isinstance(item, Tag): continue
+        result += unicode(item)
+    import pdb; pdb.set_trace()
+    save(result, '../book.txt')
 
 def crawl(start, end):
     start_num = start.split('/')[-1].split('.')[0]
