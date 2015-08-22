@@ -1,6 +1,6 @@
 import urllib2
 from bs4 import BeautifulSoup, Tag
-import sys
+import sys, pdb
 
 def save(txt, file_name):
     with open(file_name, 'aw') as f:
@@ -8,14 +8,18 @@ def save(txt, file_name):
 
 def parse(html_txt):
     soup = BeautifulSoup(html_txt)
+    result = unicode('')
+    title = soup.find('td', {'width': '880', 'height': '60', 'align': 'center', 'bgcolor': '#FFFFFF'})
+    title_content = title.contents[0].contents[0].contents[0]
+    result += title_content + u'\n'
     paragraph = soup.find('td', {'width': '820', 'align': 'left', 'bgcolor': '#FFFFFF'})
     tag_brs = paragraph.contents[1].contents
-    result = unicode('')
+    
     for item in tag_brs:
         if isinstance(item, Tag): continue
         result += unicode(item)
-    import pdb; pdb.set_trace()
-    save(result, '../book.txt')
+
+    save(result + u'\n\n', '../book.txt')
 
 def crawl(start, end):
     start_num = start.split('/')[-1].split('.')[0]
